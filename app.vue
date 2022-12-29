@@ -15,7 +15,7 @@ const error = ref('')
 onMounted(async () => {
   try {
     const response = await $fetch('/api/user')
-    user.value = response
+    user.value = JSON.parse(response)
   } catch (e) {
     console.log('not logged in')
   }

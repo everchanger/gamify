@@ -8,6 +8,14 @@ const clientPromise = client.connect();
 
 export default defineEventHandler(async (event) => {
   try {
+    const user = await readBody(event);
+    if (!user || !user.goals?.length) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Missing user or goals",
+      });
+    }
+
     const { token } = parseCookies(event);
     if (!token) {
       throw createError({
@@ -27,16 +35,19 @@ export default defineEventHandler(async (event) => {
 
     const database = (await clientPromise).db(config.MONGODB_DATABASE);
     const collection = database.collection("user");
-    const results = await collection.findOne({ email: decodedToken.email });
-    if (!results) {
+    const results = await collection.updateOne(
+      { email: decodedToken.email },
+      { $set: { goals: user.goals } }
+    );
+
+    if (!results.acknowledged) {
       throw createError({
         statusCode: 500,
-        statusMessage: "User missing from database",
+        statusMessage: "Error updating user",
       });
     }
 
-    results.hash = undefined;
-    return JSON.stringify(results);
+    return { ok: true };
   } catch (error: any) {
     sendError(event, error);
   }
