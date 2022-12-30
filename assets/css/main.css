@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn {
+  @apply px-4 py-1 font-semibold border-2 rounded;
+}
+
+.btn-outline {
+  @apply text-blue-600 bg-white border-blue-500  hover:bg-blue-100 focus:bg-blue-200
+}
+
+.btn-filled {
+  @apply text-white bg-blue-500 border-blue-500 hover:bg-blue-600 focus:bg-blue-700 hover:border-blue-600 focus:border-blue-700;
+}
+
+.btn-outline:disabled {
+  @apply text-blue-300 bg-white border-blue-300 cursor-not-allowed
+}
+
+.input-label {
+  @apply block text-sm font-semibold text-gray-700;
+}
+
+.input-text {
+  @apply px-2 py-1 bg-white border-2 rounded;
+}

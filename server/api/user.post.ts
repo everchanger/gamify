@@ -33,6 +33,10 @@ export default defineEventHandler(async (event) => {
       const insertResult = await collection.insertOne({
         email,
         hash: bcrypt.hashSync(password, config.PASSWORD_ROUNDS),
+        score: 0,
+        totalScore: 0,
+        tasks: [],
+        goals: [],
       });
       if (!insertResult.acknowledged) {
         throw createError({
