@@ -10,12 +10,23 @@
 <script setup>
 
 const user = useState('user')
+const token = useState("token");
 const error = ref('')
 
 onMounted(async () => {
   try {
-    const response = await $fetch('/api/user')
-    user.value = JSON.parse(response)
+    // Check if token is in local storage
+    token.value = localStorage.getItem('token')
+    if (token.value) {
+      const response = await $fetch('/api/user', {
+        method: 'GET',
+        headers: {
+          Authorization: token.value,
+        },
+      })
+      user.value = JSON.parse(response)
+    }
+
   } catch (e) {
     console.log('not logged in')
   }

@@ -64,9 +64,10 @@
 
 <script setup>
 const user = useState("user");
+const token = useState("token");
 
-const email = ref("test@test.com");
-const password = ref("hej123");
+const email = ref("");
+const password = ref("");
 const error = ref("");
 const editingGoalIndex = ref(false);
 const editingTaskIndex = ref(false);
@@ -77,7 +78,7 @@ const compltetedTasks = computed(() => {
 
 const login = async () => {
   try {
-    await $fetch("/api/user", {
+    const { token: signedInToken } = await $fetch("/api/user", {
       method: "POST",
       body: JSON.stringify({
         email: email.value,
@@ -85,7 +86,15 @@ const login = async () => {
       }),
     });
 
-    const response = await $fetch("/api/user")
+    token.value = `Bearer ${signedInToken}`
+    localStorage.setItem('token', token.value)
+
+    const response = await $fetch("/api/user", {
+      method: "GET",
+      headers: {
+        Authorization: token.value,
+      },
+    });
     user.value = JSON.parse(response)
   } catch (error) {
     error.value = error
@@ -94,9 +103,11 @@ const login = async () => {
 };
 
 const logout = async () => {
-  await $fetch("/api/user", {
-    method: "delete",
-  });
+  // await $fetch("/api/user", {
+  //   method: "delete",
+  // });
+  token.value = "";
+  localStorage.removeItem('token')
   user.value = "";
 };
 
@@ -104,6 +115,9 @@ const updateUser = async () => {
   try {
     const response = await $fetch("/api/user", {
       method: "PUT",
+      headers: {
+        Authorization: token.value,
+      },
       body: JSON.stringify(user.value),
     });
     user.value = response

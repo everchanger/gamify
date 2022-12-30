@@ -51,8 +51,9 @@ export default defineEventHandler(async (event) => {
 
     setCookie(event, "token", token, { httpOnly: true });
 
+    // Remove token return when this is fixed: https://github.com/nuxt/framework/issues/8705
     return {
-      ok: true,
+      token,
     };
   } catch (error: any) {
     sendError(event, error);

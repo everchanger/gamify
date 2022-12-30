@@ -8,7 +8,9 @@ const clientPromise = client.connect();
 
 export default defineEventHandler(async (event) => {
   try {
-    const { token } = parseCookies(event);
+    const token = getRequestHeader(event, "authorization");
+
+    // const { token } = parseCookies(event);
     if (!token) {
       throw createError({
         statusCode: 401,
@@ -16,7 +18,8 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const decodedToken = jwt.verify(token, config.JWT_SECRET);
+    const tokenWithoutBearer = token.replace("Bearer ", "");
+    const decodedToken = jwt.verify(tokenWithoutBearer, config.JWT_SECRET);
 
     if (!decodedToken) {
       throw createError({
