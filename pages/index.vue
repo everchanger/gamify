@@ -90,17 +90,18 @@ const openDialog = (type, index) => {
 };
 
 const closeDialog = () => {
-  editingGoalIndex.value = false;
-  editingTaskIndex.value = false;
-  dialog.value.close();
 
-  // dialog.value.classList.add('hide');
-  // dialog.value.addEventListener('animationEnd', function () {
-  //   console.log('animation end')
-  //   dialog.value.classList.remove('hide');
-  //   dialog.value.close();
-  //   dialog.value.removeEventListener('animationEnd', arguments.callee, false);
-  // }, false);
+  // dialog.value.close();
+
+  dialog.value.classList.add('hide');
+
+  dialog.value.addEventListener('animationend', () => {
+    console.log('animation end')
+    dialog.value.classList.remove('hide');
+    dialog.value.close();
+    editingGoalIndex.value = false;
+    editingTaskIndex.value = false;
+  }, { once: true });
 };
 
 const login = async () => {
@@ -236,39 +237,30 @@ const handleSubmit = (goal) => {
 </script>
 
 <style>
-/* .dialog {}
+.dialog {}
 
-.dialog::backdrop {
-  @apply bg-gray-900 opacity-30;
-} */
+
 
 .dialog[open] {
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  -webkit-animation: show-dialog 1s ease normal;
+  @apply border rounded-lg shadow-sm p-6;
+  animation: show-dialog 0.35s ease normal;
 }
 
 .dialog.hide {
-  -webkit-animation: hide-dialog 1s ease normal;
+  animation: hide-dialog 0.35s ease normal;
 }
 
 .dialog::backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  @apply fixed top-0 left-0 right-0 bottom-0 animate-none;
   background-color: rgba(0, 0, 0, .5);
-  animation: none;
 }
 
 .dialog[open]::backdrop {
-  animation: show-backdrop 0.5s ease 0.2s normal;
+  animation: show-backdrop 0.25s ease;
 }
 
 .dialog.hide::backdrop {
-  animation: hide-backdrop 0.5s ease 0.2s normal;
+  animation: hide-backdrop 0.25s ease;
 }
 
 @keyframes show-dialog {
