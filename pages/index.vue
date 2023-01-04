@@ -15,25 +15,32 @@
           <p class="mr-8">Signed in as {{ user.email }}</p>
           <button class="btn btn-outline" @click="logout">Logout</button>
         </header>
-        <p class="mb-4 text-2xl" v-if="user.score"><span class="font-bold text-blue-800 animate-pulse">{{ user.score
-}}</span> points
+        <p class="mb-4 text-2xl" v-if="user.score"><span class="font-bold text-blue-800 animate-pulse">{{
+          user.score
+        }}</span> points
           available!
         </p>
         <div class="space-y-8">
           <div class="space-y-6">
             <h2 class="mb-4 text-2xl">Goals</h2>
-            <Goal v-for="(goal, index) in user.goals" :goal="goal" :key="goal.name" @edit="editingGoalIndex = index"
+            <Goal v-for="(goal, index) in user.goals" :goal="goal" :key="goal.name" @edit="openDialog('goal', index)"
               @delete="remove('goals', index)" @invest="invest" :score="user.score" />
             <p class="italic" v-if="!user.goals?.length">No goals created</p>
-            <button class=" btn btn-filled" v-if="editingGoalIndex === false" @click="editingGoalIndex = true">
+            <button class=" btn btn-filled" @click="openDialog('goal', true)">
               Create goal
             </button>
-
-            <GoalForm v-if="editingGoalIndex !== false" :goal="
-  editingGoalIndex === true
-    ? undefined
-    : user.goals[editingGoalIndex]
-" @submit="handleSubmit" @close="editingGoalIndex = false" />
+            <dialog ref="dialog" class="dialog">
+              <GoalForm v-if="editingGoalIndex !== false" :goal="
+                editingGoalIndex === true
+                  ? undefined
+                  : user.goals[editingGoalIndex]
+              " @submit="handleSubmit" @close="closeDialog" />
+              <TaskForm v-if="editingTaskIndex !== false" :task="
+                editingTaskIndex === true
+                  ? undefined
+                  : user.tasks[editingTaskIndex]
+              " @submit="handleSubmit" @close="closeDialog" />
+            </dialog>
           </div>
           <div class="space-y-6">
             <h2 class="mb-4 text-2xl">Tasks</h2>
@@ -41,7 +48,7 @@
               @edit="editingTaskIndex = index" @delete="remove('tasks', index)" @complete="completeTask" />
             <p class="italic" v-if="!user.tasks?.length">No tasks created</p>
             <div class="flex flex-col items-start space-y-3">
-              <button class="btn btn-filled" v-if="editingTaskIndex === false" @click="editingTaskIndex = true">
+              <button class="btn btn-filled" @click="openDialog('task', true)">
                 Create task
               </button>
               <button class="btn btn-outline" v-if="editingTaskIndex === false" :disabled="!compltetedTasks?.length"
@@ -49,11 +56,6 @@
                 Delete all completed tasks
               </button>
             </div>
-            <TaskForm v-if="editingTaskIndex !== false" :task="
-  editingTaskIndex === true
-    ? undefined
-    : user.tasks[editingTaskIndex]
-" @submit="handleSubmit" @close="editingTaskIndex = false" />
           </div>
         </div>
       </template>
@@ -72,9 +74,34 @@ const error = ref("");
 const editingGoalIndex = ref(false);
 const editingTaskIndex = ref(false);
 
+const dialog = ref(null);
+
 const compltetedTasks = computed(() => {
   return user.value?.tasks?.filter((task) => task.complete);
 });
+
+const openDialog = (type, index) => {
+  if (type === 'goal') {
+    editingGoalIndex.value = index;
+  } else {
+    editingTaskIndex.value = index;
+  }
+  dialog.value.showModal();
+};
+
+const closeDialog = () => {
+  editingGoalIndex.value = false;
+  editingTaskIndex.value = false;
+  dialog.value.close();
+
+  // dialog.value.classList.add('hide');
+  // dialog.value.addEventListener('animationEnd', function () {
+  //   console.log('animation end')
+  //   dialog.value.classList.remove('hide');
+  //   dialog.value.close();
+  //   dialog.value.removeEventListener('animationEnd', arguments.callee, false);
+  // }, false);
+};
 
 const login = async () => {
   try {
@@ -204,9 +231,78 @@ const handleSubmit = (goal) => {
     console.log('whoops, something went wrong')
   }
 
-
-
-  editingGoalIndex.value = false
-  editingTaskIndex.value = false
+  closeDialog()
 };
 </script>
+
+<style>
+/* .dialog {}
+
+.dialog::backdrop {
+  @apply bg-gray-900 opacity-30;
+} */
+
+.dialog[open] {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-animation: show-dialog 1s ease normal;
+}
+
+.dialog.hide {
+  -webkit-animation: hide-dialog 1s ease normal;
+}
+
+.dialog::backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  animation: none;
+}
+
+.dialog[open]::backdrop {
+  animation: show-backdrop 0.5s ease 0.2s normal;
+}
+
+.dialog.hide::backdrop {
+  animation: hide-backdrop 0.5s ease 0.2s normal;
+}
+
+@keyframes show-dialog {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
+@keyframes hide-dialog {
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes show-backdrop {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hide-backdrop {
+  to {
+    opacity: 0;
+  }
+}
+</style>
