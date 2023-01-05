@@ -5,7 +5,7 @@
         <h1 class="p-2 text-xl font-semibold text-teal-700 uppercase bg-teal-100 cursor-pointer rounded-xl">Goalify
         </h1><span class="font-semibold text-teal-700">- get things done</span>
       </nuxt-link>
-      <button v-if="token" class=" btn btn-outline btn-icon" title="Sign out" @click="logout">
+      <button v-if="user" class=" btn btn-outline btn-icon" title="Sign out" @click="logout">
         <Icon name="fa6-solid:arrow-right-to-bracket" />
       </button>
     </header>
@@ -15,6 +15,6 @@
 
 
 <script setup>
-const token = useState("token");
+const user = useState("user");
 const logout = useLogout()
 </script>
