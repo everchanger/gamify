@@ -3,12 +3,12 @@
     <div class="flex justify-between">
       <h4 class="font-semibold">{{ goal.name }}</h4>
       <div class="space-x-3 text-gray-800">
-        <font-awesome-icon v-if="canInvest" class="cursor-pointer hover:text-blue-800" icon="fa-solid fa-dollar"
-          size="xl" @click="isInvesting = !isInvesting" title="Invest" />
-        <font-awesome-icon v-if="!isDone" class="cursor-pointer hover:text-blue-800" icon="fa-solid fa-cog" size="xl"
+        <Icon v-if="canInvest" class="cursor-pointer hover:text-blue-800" name="fa6-solid:dollar-sign"
+          @click="isInvesting = !isInvesting" title="Invest" />
+        <Icon v-if="!isDone" class="cursor-pointer hover:text-blue-800" name="fa6-solid:wrench"
           @click="emits('edit', goal)" title="Edit" />
-        <font-awesome-icon class="cursor-pointer hover:text-blue-800" icon="fa-solid fa-circle-xmark" size="xl"
-          @click="emits('delete', goal)" title="Delete" />
+        <Icon class="cursor-pointer hover:text-blue-800" name="fa6-solid:circle-xmark" @click="emits('delete', goal)"
+          title="Delete" />
 
       </div>
     </div>

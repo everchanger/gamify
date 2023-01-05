@@ -4,10 +4,10 @@
     <div class="flex justify-between">
       <h4 class="font-semibold">{{ task.name }}</h4>
       <div class="space-x-3 text-gray-800">
-        <font-awesome-icon v-if="!task.complete" class="cursor-pointer hover:text-blue-800" icon="fa-solid fa-cog"
-          size="xl" @click="emits('edit', task)" title="Edit" />
-        <font-awesome-icon class="cursor-pointer hover:text-blue-800" icon="fa-solid fa-circle-xmark" size="xl"
-          @click="emits('delete', task)" title="Delete" />
+        <Icon v-if="!task.complete" class="cursor-pointer hover:text-blue-800" icon="fa6-solid:wrench"
+          @click="emits('edit', task)" title="Edit" />
+        <Icon class="cursor-pointer hover:text-blue-800" name="fa6-solid:circle-xmark" @click="emits('delete', task)"
+          title="Delete" />
       </div>
     </div>
     <div class="text-sm">{{ task.score }} points</div>

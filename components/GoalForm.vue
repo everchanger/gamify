@@ -1,13 +1,9 @@
 <template>
   <div class="space-y-4">
-    <div class="flex flex-col"><label class="input-label" for="name">Name</label><input class="input-text" id="name"
-        v-model="name" placeholder="A trip to Paris" /></div>
-    <div class="flex flex-col"><label class="input-label" for="descriptio">Description</label><input class="input-text"
-        id="description" v-model="description" placeholder="A trip is a real motivator!" /></div>
-    <div class="flex flex-col"><label class="input-label" for="score">Points needed</label><input class="input-text"
-        id="score" v-model="score" /></div>
-    <div class="flex flex-col"><label class="input-label" for="progress">Progress</label><input class="input-text"
-        id="progress" v-model="progress" /></div>
+    <CInput v-model="name" id="name" label="Name" placeholder="A trip to Paris" />
+    <CInput v-model="description" id="description" label="Description" placeholder="A trip is a real motivator!" />
+    <CInput v-model="score" id="score" label="Points needed" type="number" />
+    <CInput v-model="progress" id="progress" label="Progress" type="number" />
     <button class="mr-3 btn btn-filled" @click="submit">Save</button>
     <button class="btn btn-outline" @click="emits('close')">Close</button>
   </div>

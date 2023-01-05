@@ -1,24 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  build: {
-    transpile: [
-      "@fortawesome/fontawesome-svg-core",
-      "@fortawesome/pro-solid-svg-icons",
-      "@fortawesome/pro-regular-svg-icons",
-      "@fortawesome/pro-light-svg-icons",
-      "@fortawesome/free-brands-svg-icons",
-    ],
-  },
-  css: [
-    "~/assets/css/main.css",
-    "@fortawesome/fontawesome-svg-core/styles.css",
-  ],
+  css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
+  modules: ["nuxt-icon"],
   runtimeConfig: {
     MONGODB_URI: process.env.MONGODB_URI,
     MONGODB_DATABASE: process.env.MONGODB_DATABASE,
